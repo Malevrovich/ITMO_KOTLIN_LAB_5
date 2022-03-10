@@ -2,9 +2,17 @@ package commands.util
 
 import commands.*
 import data.movie.Movie
-import org.kodein.di.DI
+import executor.Executor
+import executor.StreamExecutorKeeper
+import storage.Storage
+import storage.StorageKeeper
 
-class CommandFactoryImpl(di: DI): CommandFactory(di) {
+class CommandFactoryImpl(
+    storageKeeper: StorageKeeper,
+    currentStorage: Storage,
+    executor: Executor,
+    streamExecutorKeeper: StreamExecutorKeeper
+): CommandFactory(storageKeeper, currentStorage, executor, streamExecutorKeeper) {
     override fun buildHelp(): HelpCmd {
         return HelpCmd()
     }
@@ -38,7 +46,7 @@ class CommandFactoryImpl(di: DI): CommandFactory(di) {
     }
 
     override fun buildExecuteFile(filename: String): ExecuteFileCmd {
-        return ExecuteFileCmd(filename, streamExecutor, currentExecutor)
+        return ExecuteFileCmd(filename, streamExecutorKeeper.currentStreamExecutor)
     }
 
     override fun buildExit(): ExitCmd {
@@ -54,7 +62,7 @@ class CommandFactoryImpl(di: DI): CommandFactory(di) {
     }
 
     override fun buildHistory(): HistoryCmd {
-        return HistoryCmd(currentExecutor)
+        return HistoryCmd(executor)
     }
 
     override fun buildSumOfLength(): SumOfLength {

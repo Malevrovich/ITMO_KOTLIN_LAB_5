@@ -2,7 +2,6 @@ package executor
 
 import commands.Command
 import commands.util.CommandResult
-import java.io.InputStream
 import java.util.*
 
 class ExecutorImpl: Executor{

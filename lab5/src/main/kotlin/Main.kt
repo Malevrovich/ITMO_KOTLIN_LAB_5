@@ -12,40 +12,43 @@ import data.person.PersonBuilder
 import data.person.PersonBuilderImpl
 import data.person.PersonReader
 import data.person.PersonReaderImpl
-import executor.Executor
-import executor.ExecutorImpl
-import executor.StreamExecutor
-import executor.StreamExecutorImpl
+import executor.*
 import org.kodein.di.*
 import storage.FileStorageKeeper
 import storage.LinkedHashSetStorage
 import storage.Storage
 import storage.StorageKeeper
-import util.ParseException
-import java.io.FileInputStream
 import java.io.IOException
-import java.util.*
 
 fun main(args: Array<String>) {
-    val di = DI {
-        bindProvider<CommandFactory> { CommandFactoryImpl(di) }
-        bindProvider<CommandReader> { CommandReaderImpl(di) }
 
-        bindProvider<CoordinatesReader> { CoordinatesReaderImpl(di) }
-        bindProvider<CoordinatesBuilder> { CoordinatesBuilderImpl() }
-        bindSingleton { CommandFactoryConfigure() }
+    val di = DI.direct {
+        bindSingleton<CommandFactory> { CommandFactoryImpl(instance(), instance(), instance(), instance()) }
+        bindSingleton<CommandReader> { CommandReaderImpl(instance(), instance()) }
 
-        bindProvider<MovieReader> { MovieReaderImpl(di) }
-        bindProvider<MovieBuilder> { MovieBuilderImpl(di) }
+        bindSingleton<CoordinatesReader> { CoordinatesReaderImpl(instance()) }
+        bindSingleton<CoordinatesBuilder> { CoordinatesBuilderImpl() }
 
-        bindProvider<PersonReader> { PersonReaderImpl(di) }
-        bindProvider<PersonBuilder> { PersonBuilderImpl() }
+        bindSingleton<MovieReader> { MovieReaderImpl(instance(), instance(), instance()) }
+        bindSingleton<MovieBuilder> { MovieBuilderImpl(instance(), instance(), instance()) }
 
-        bindProvider<Storage> { LinkedHashSetStorage(di) }
-        bindProvider<Executor> { ExecutorImpl() }
-        bindProvider<StreamExecutor> { StreamExecutorImpl(di) }
+        bindSingleton<PersonReader> { PersonReaderImpl(instance()) }
+        bindSingleton<PersonBuilder> { PersonBuilderImpl() }
 
-        bindSingleton<StorageKeeper> { FileStorageKeeper(di) }
+        bindSingleton<Executor> { ExecutorImpl() }
+
+        bindProvider<Storage> { LinkedHashSetStorage(instance()) }
+        bindSingleton<StorageKeeper> { FileStorageKeeper(instance(), instance()) }
+        bindSingleton { StreamExecutorKeeper() }
+
+        bindSingleton<StreamExecutor> {
+            val res = StreamExecutorImpl(instance(), instance())
+
+            val streamExecutorKeeper: StreamExecutorKeeper = instance()
+            streamExecutorKeeper.currentStreamExecutor = res
+
+            res
+        }
 
         bindSingleton { IdGenerator() }
     }
@@ -56,10 +59,10 @@ fun main(args: Array<String>) {
         return
     }
 
-    val storageKeeper: StorageKeeper by di.instance()
-    storageKeeper.open(args[0])
+    val storageKeeper: StorageKeeper = di.instance()
+    storageKeeper.openAndParse(args[0])
 
-    val streamExecutor: StreamExecutor by di.instance()
+    val streamExecutor: StreamExecutor = di.instance()
 
     try {
         streamExecutor.execute(System.`in`, System.out)

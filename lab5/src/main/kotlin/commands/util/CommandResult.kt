@@ -1,4 +1,3 @@
 package commands.util
 
-class CommandResult(val stop: Boolean, val out: String = "") {
-}
+data class CommandResult(val stop: Boolean, val out: String = "")

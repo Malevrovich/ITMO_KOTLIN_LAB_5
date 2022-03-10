@@ -4,12 +4,15 @@ import data.movie.Movie
 import data.movie.MovieBuilder
 import data.movie.MovieGenre
 import data.person.Person
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import org.kodein.di.DI
 import org.kodein.di.instance
-import java.time.LocalDateTime
 
-class LinkedHashSetStorage(di: DI): Storage(LocalDateTime.now()), Iterable<Movie> {
-    private val movieBuilder: MovieBuilder by di.instance()
+class LinkedHashSetStorage(
+    private val movieBuilder: MovieBuilder
+) : Storage(Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())), Iterable<Movie> {
 
     private val data: LinkedHashSet<Movie> = LinkedHashSet()
 

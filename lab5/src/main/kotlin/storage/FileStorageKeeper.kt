@@ -10,16 +10,17 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import kotlin.reflect.KProperty
 
-class FileStorageKeeper(di: DI) : StorageKeeper {
-    private val currentStorage: Storage by di.instance()
+class FileStorageKeeper(
+    private val storage: Storage,
+    private val idGenerator: IdGenerator
+) : StorageKeeper {
     private lateinit var currentFilename: String
-    private val idGenerator: IdGenerator by di.instance()
 
     override operator fun getValue(obj: Any, property: KProperty<*>): Storage {
-        return currentStorage
+        return storage
     }
 
-    override fun open(filename: String){
+    override fun openAndParse(filename: String){
         val fileReader = FileInputStream(filename).reader()
 
         var text: String
@@ -36,15 +37,15 @@ class FileStorageKeeper(di: DI) : StorageKeeper {
             Json.decodeFromString(ListSerializer(Movie.serializer()), text)
         }
 
-        idGenerator.last = list.maxOf { it.id }
+        idGenerator.last = list.maxOfOrNull { it.id } ?: 0
 
-        currentStorage.setData(list)
+        storage.setData(list)
     }
 
     override fun save(){
         val fileWriter = FileOutputStream(currentFilename).writer()
 
-        val string = Json.encodeToString(ListSerializer(Movie.serializer()), currentStorage.getAll())
+        val string = Json.encodeToString(ListSerializer(Movie.serializer()), storage.getAll())
 
         fileWriter.use { fileWriter.write(string) }
     }

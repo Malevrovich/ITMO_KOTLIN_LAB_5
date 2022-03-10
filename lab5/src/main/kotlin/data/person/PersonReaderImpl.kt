@@ -12,8 +12,9 @@ import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 import java.util.*
 
-class PersonReaderImpl(di: DI): PersonReader {
-    private val personBuilder: PersonBuilder by di.instance()
+class PersonReaderImpl(
+    private val personBuilder: PersonBuilder
+): PersonReader {
 
     override fun askName(inp: Scanner, out: PrintStream, personBuilder: PersonBuilder) {
         val del = inp.delimiter()

@@ -4,20 +4,18 @@ import commands.*
 import data.movie.Movie
 import executor.Executor
 import executor.StreamExecutor
+import executor.StreamExecutorKeeper
 import org.kodein.di.DI
 import org.kodein.di.instance
 import storage.Storage
 import storage.StorageKeeper
 
-abstract class CommandFactory(di: DI) {
-    private val config: CommandFactoryConfigure by di.instance()
-
-    val storageKeeper: StorageKeeper by di.instance()
-
-    open val currentStorage: Storage by storageKeeper
-    open val streamExecutor: StreamExecutor by config
-    open val currentExecutor: Executor by config
-
+abstract class CommandFactory(
+    val storageKeeper: StorageKeeper,
+    open val currentStorage: Storage,
+    open val executor: Executor,
+    val streamExecutorKeeper: StreamExecutorKeeper
+) {
     abstract fun buildHelp(): HelpCmd
     abstract fun buildInfo(): InfoCmd
     abstract fun buildShow(): ShowCmd

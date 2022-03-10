@@ -7,15 +7,16 @@ import data.coordinates.CoordinatesReader
 import data.person.PersonReader
 import org.kodein.di.DI
 import org.kodein.di.instance
+import util.ParseException
 import java.io.EOFException
 import java.io.PrintStream
 import java.util.*
 
-class MovieReaderImpl(di: DI) : MovieReader{
-
-    private val coordinatesReader: CoordinatesReader by di.instance()
-    private val personReader: PersonReader by di.instance()
-    private val movieBuilder: MovieBuilder by di.instance()
+class MovieReaderImpl(
+    private val coordinatesReader: CoordinatesReader,
+    private val personReader: PersonReader,
+    private val movieBuilder: MovieBuilder
+) : MovieReader{
 
     fun askName(inp: Scanner, out: PrintStream, movieBuilder: MovieBuilder){
         val del = inp.delimiter()
@@ -52,12 +53,15 @@ class MovieReaderImpl(di: DI) : MovieReader{
                 throw EOFException()
             }
 
-            if(!checkInt(inp, out, "oscarsCount")) continue
-
             try{
+                checkFloat(inp, "oscarsCount")
                 movieBuilder.setOscarsCount(inp.nextInt())
             } catch (e: IllegalArgumentException){
                 out.println(e.message)
+                continue
+            } catch (e: ParseException){
+                out.println(e.message)
+                inp.nextLine()
                 continue
             }
             break
@@ -77,12 +81,15 @@ class MovieReaderImpl(di: DI) : MovieReader{
                 throw EOFException()
             }
 
-            if(!checkFloat(inp, out, "usaBoxOffice")) continue
-
             try{
+                checkFloat(inp, "usaBoxOffice")
                 movieBuilder.setUsaBoxOffice(inp.nextFloat())
             } catch (e: IllegalArgumentException){
                 out.println(e.message)
+                continue
+            } catch (e: ParseException) {
+                out.println(e.message)
+                inp.nextLine()
                 continue
             }
 
@@ -103,12 +110,15 @@ class MovieReaderImpl(di: DI) : MovieReader{
                 throw EOFException()
             }
 
-            if(!checkInt(inp, out, "length")) continue
-
             try {
+                checkInt(inp, "length")
                 movieBuilder.setLength(inp.nextInt())
             } catch (e: IllegalArgumentException){
                 out.println(e.message)
+                continue
+            } catch (e: ParseException){
+                out.println(e.message)
+                inp.nextLine()
                 continue
             }
 

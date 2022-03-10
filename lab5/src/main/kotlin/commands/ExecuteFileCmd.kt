@@ -9,12 +9,11 @@ import java.io.FileNotFoundException
 import java.io.IOException
 
 class ExecuteFileCmd(private val filename: String,
-                     private val streamExecutor: StreamExecutor,
-                     private val curExecutor: Executor): Command("execute_file") {
+                     private val streamExecutor: StreamExecutor): Command("execute_file") {
     override fun execute(): CommandResult {
         return try {
             FileInputStream(filename).use {
-                inp -> streamExecutor.execute(inp, System.out, curExecutor)
+                inp -> streamExecutor.execute(inp, System.out)
             }
 
             CommandResult(false, "Файл $filename был успешно исполнен")

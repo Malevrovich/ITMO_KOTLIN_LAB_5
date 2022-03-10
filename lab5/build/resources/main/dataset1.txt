@@ -1,1 +1,1 @@
-[{"id":2,"creationDate":"2022-03-03T16:48:59.989735300","genre":"WESTERN","name":"1","screenwriter":{"name":"1","birthday":null,"nationality":null},"oscarsCount":1,"usaBoxOffice":1.0,"length":1,"coordinates":{"x":1.0,"y":1}}]
+[]

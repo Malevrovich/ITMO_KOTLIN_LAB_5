@@ -3,7 +3,7 @@ package storage
 import data.movie.Movie
 import data.movie.MovieGenre
 import data.person.Person
-import java.time.LocalDateTime
+import kotlinx.datetime.LocalDateTime
 
 abstract class Storage(val initTime: LocalDateTime) {
     abstract fun getAll(): List<Movie>

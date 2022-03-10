@@ -1,25 +1,21 @@
 package data
 
+import util.ParseException
 import java.io.PrintStream
 import java.util.*
 
 
-fun checkFloat(s: Scanner, out: PrintStream, field: String): Boolean{
+fun checkFloat(s: Scanner, field: String){
     if(!s.hasNextFloat()){
-        s.nextLine()
-        out.println("Поле $field должно быть числом")
-        return false
+        throw ParseException("$field должно быть числом")
     }
-    return true
 }
 
-fun checkInt(s: Scanner, out: PrintStream, field: String): Boolean{
+fun checkInt(s: Scanner, field: String){
     if(!s.hasNextInt()){
         s.nextLine()
-        out.println("Поле $field должно быть целым числом")
-        return false
+        throw ParseException("Поле $field должно быть целым числом")
     }
-    return true
 }
 
 fun checkNull(obj: Any?, name: String){

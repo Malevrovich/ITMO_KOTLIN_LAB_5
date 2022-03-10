@@ -4,13 +4,14 @@ import data.checkFloat
 import data.checkInt
 import org.kodein.di.DI
 import org.kodein.di.instance
+import util.ParseException
 import java.io.EOFException
-import java.io.OutputStream
 import java.io.PrintStream
 import java.util.*
 
-class CoordinatesReaderImpl(di: DI): CoordinatesReader {
-    private val coordinatesBuilder: CoordinatesBuilder by di.instance()
+class CoordinatesReaderImpl(
+    private val coordinatesBuilder: CoordinatesBuilder
+): CoordinatesReader {
 
     override fun askX(inp: Scanner, out: PrintStream, coordinatesBuilder: CoordinatesBuilder) {
         val del = inp.delimiter()
@@ -23,12 +24,15 @@ class CoordinatesReaderImpl(di: DI): CoordinatesReader {
                 throw EOFException()
             }
 
-            if(!checkFloat(inp, out, "Coordinate.x")) continue
-
             try{
+                checkFloat(inp, "Coordinate.x")
                 coordinatesBuilder.setX(inp.nextFloat())
             } catch (e: IllegalArgumentException){
                 out.println(e.message)
+                continue
+            } catch (e: ParseException){
+                out.println(e.message)
+                inp.nextLine()
                 continue
             }
 
@@ -49,9 +53,17 @@ class CoordinatesReaderImpl(di: DI): CoordinatesReader {
                 throw EOFException()
             }
 
-            if(!checkInt(inp, out, "Coordinates.y")) continue
-
-            coordinatesBuilder.setY(inp.nextInt())
+            try {
+                checkInt(inp, "Coordinates.y")
+                coordinatesBuilder.setY(inp.nextInt())
+            } catch (e: IllegalArgumentException){
+                out.println(e.message)
+                continue
+            } catch (e: ParseException){
+                out.println(e.message)
+                inp.nextLine()
+                continue
+            }
             break
         }
 

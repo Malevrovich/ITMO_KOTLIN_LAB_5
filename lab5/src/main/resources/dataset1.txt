@@ -1,1 +1,1 @@
-[{"id":2,"creationDate":"2022-03-03T16:48:59.989735300","genre":"WESTERN","name":"1","screenwriter":{"name":"1","birthday":null,"nationality":null},"oscarsCount":1,"usaBoxOffice":1.0,"length":1,"coordinates":{"x":1.0,"y":1}},{"id":4,"creationDate":"2022-03-03T16:55:35.398550600","genre":"TRAGEDY","name":"23","screenwriter":{"name":"123","birthday":"2001-12-12T11:44","nationality":"USA"},"oscarsCount":324,"usaBoxOffice":23412.0,"length":232323,"coordinates":{"x":342.0,"y":234}}]
+[]

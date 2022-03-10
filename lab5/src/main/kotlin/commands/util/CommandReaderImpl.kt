@@ -9,9 +9,12 @@ import util.ParseException
 import java.io.PrintStream
 import java.util.*
 
-class CommandReaderImpl(di: DI): CommandReader {
-    private val factory: CommandFactory by di.instance()
-    private val movieReader: MovieReader by di.instance()
+class CommandReaderImpl(
+    private val factory: CommandFactory,
+    private val movieReader: MovieReader
+): CommandReader {
+
+
 
     private fun checkSize(arr: List<String>, size: Int, name: String){
         if(arr.size != size){
@@ -29,10 +32,6 @@ class CommandReaderImpl(di: DI): CommandReader {
     }
 
     override fun readCommand(inp: Scanner, out: PrintStream): Command {
-        fun askMovie(): Movie {
-            return movieReader.askMovie(inp, out)
-        }
-
         inp.useDelimiter("\n")
 
         val s = inp.nextLine()
@@ -42,10 +41,6 @@ class CommandReaderImpl(di: DI): CommandReader {
         }
 
         val arr = s.split(" ")
-
-        fun getId(): Int{
-            return getId(arr, arr[0])
-        }
 
         return when(arr[0]){
             "help" -> factory.buildHelp()
@@ -58,15 +53,15 @@ class CommandReaderImpl(di: DI): CommandReader {
             "sum_of_length" -> factory.buildSumOfLength()
             "print_unique_genre" -> factory.buildPrintUniqueGenre()
             "print_field_descending_screenwriter" -> factory.buildPrintFieldDescendingScreenwriter()
-            "add" -> factory.buildAdd(askMovie())
-            "update" -> factory.buildUpdate(getId(), askMovie())
-            "remove_by_id" -> factory.buildRemove(getId())
+            "add" -> factory.buildAdd(movieReader.askMovie(inp, out))
+            "update" -> factory.buildUpdate(getId(arr, arr[0]), movieReader.askMovie(inp, out))
+            "remove_by_id" -> factory.buildRemove(getId(arr, arr[0]))
             "execute_script" -> {
                 checkSize(arr, 2, arr[0])
                 factory.buildExecuteFile(arr[1])
             }
-            "add_if_min" -> factory.buildAddIfMin(askMovie())
-            "remove_greater" -> factory.buildRemoveGreater(askMovie())
+            "add_if_min" -> factory.buildAddIfMin(movieReader.askMovie(inp, out))
+            "remove_greater" -> factory.buildRemoveGreater(movieReader.askMovie(inp, out))
             else -> throw ParseException("Неизвестная команда ${arr[0]}")
         }
     }

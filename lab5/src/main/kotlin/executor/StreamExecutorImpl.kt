@@ -1,7 +1,6 @@
 package executor
 
 import commands.Command
-import commands.util.CommandFactoryConfigure
 import commands.util.CommandReader
 import commands.util.CommandResult
 import org.kodein.di.DI
@@ -13,32 +12,27 @@ import java.io.OutputStream
 import java.io.PrintStream
 import java.util.*
 
-class StreamExecutorImpl(private val di: DI): StreamExecutor {
-    private val defaultExecutor: Executor by di.instance()
-    private val commandReader: CommandReader by di.instance()
-    private val commandFactoryConfigure: CommandFactoryConfigure by di.instance()
+class StreamExecutorImpl(
+    private val commandReader: CommandReader,
+    private val executor: Executor
+): StreamExecutor {
 
-    override fun execute(_inp: InputStream, _out: OutputStream, _executor: Executor?): List<Command> {
-        val executor = _executor ?: defaultExecutor
+    override fun execute(inputStream: InputStream, outputStream: OutputStream): List<Command> {
+        val inputScanner = Scanner(inputStream)
+        val printStream = PrintStream(outputStream)
 
-        val inp = Scanner(_inp)
-        val out = PrintStream(_out)
-
-        while(inp.hasNextLine()){
-            commandFactoryConfigure.currentExecutor = executor
-            commandFactoryConfigure.streamExecutor = StreamExecutorImpl(di)
-
+        while(inputScanner.hasNextLine()){
             val res: CommandResult = try{
-                val cmd = commandReader.readCommand(inp, out) ?: continue
+                val cmd = commandReader.readCommand(inputScanner, printStream) ?: continue
                 executor.execute(cmd)
             } catch (e: ParseException){
-                out.println(e.message)
+                printStream.println(e.message)
                 continue
             } catch (e: EOFException){
                 CommandResult(true, "Входной поток был прерван")
             }
 
-            out.println(res.out)
+            printStream.println(res.out)
             if(res.stop){
                 break
             }

@@ -13,10 +13,11 @@ import kotlinx.datetime.toLocalDateTime
 import org.kodein.di.DI
 import org.kodein.di.instance
 
-class MovieBuilderImpl(di: DI): MovieBuilder {
-    private val idGenerator: IdGenerator by di.instance()
-    private val personBuilder: PersonBuilder by di.instance()
-    private val coordinatesBuilder: CoordinatesBuilder by di.instance()
+class MovieBuilderImpl(
+    private val idGenerator: IdGenerator,
+    private val personBuilder: PersonBuilder,
+    private val coordinatesBuilder: CoordinatesBuilder
+): MovieBuilder {
 
     private var genre: MovieGenre? = null
     private var name: String? = null
