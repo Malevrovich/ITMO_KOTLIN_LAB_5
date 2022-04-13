@@ -1,0 +1,6 @@
+D:\Programming\ITMO_KOTLIN\lab5\src\test\kotlin\data\movie\MovieReaderImplTest.kt
+D:\Programming\ITMO_KOTLIN\lab5\src\test\kotlin\data\movie\MovieBuilderImplTest.kt
+D:\Programming\ITMO_KOTLIN\lab5\src\test\kotlin\data\coordinates\CoordinatesReaderImplTest.kt
+D:\Programming\ITMO_KOTLIN\lab5\src\test\kotlin\server\storage\LinkedHashSetStorageTest.kt
+D:\Programming\ITMO_KOTLIN\lab5\src\test\kotlin\data\person\PersonReaderImplTest.kt
+D:\Programming\ITMO_KOTLIN\lab5\src\test\kotlin\data\IdGeneratorTest.kt

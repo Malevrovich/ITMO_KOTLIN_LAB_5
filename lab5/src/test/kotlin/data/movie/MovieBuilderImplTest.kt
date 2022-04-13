@@ -1,11 +1,13 @@
 package data.movie
 
-import data.coordinates.Coordinates
-import data.coordinates.CoordinatesBuilder
-import data.coordinates.CoordinatesBuilderImpl
-import data.person.Person
-import data.person.PersonBuilder
-import data.person.PersonBuilderImpl
+import share.data.coordinates.Coordinates
+import client.data.coordinates.CoordinatesBuilder
+import client.data.coordinates.CoordinatesBuilderImpl
+import client.data.movie.MovieBuilder
+import client.data.movie.MovieBuilderImpl
+import share.data.person.Person
+import client.data.person.PersonBuilder
+import client.data.person.PersonBuilderImpl
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -13,6 +15,8 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.kodein.di.DI
 import org.kodein.di.bindProvider
+import share.data.movie.Movie
+import share.data.movie.MovieGenre
 import kotlin.test.BeforeTest
 import kotlin.test.assertFailsWith
 
@@ -161,7 +165,8 @@ internal class MovieBuilderImplTest {
 
         val res = movieBuilder.build()
 
-        checkFields(Movie(id, creationDateTime, genre, name, screenwriter, oscarsCount,
+        checkFields(
+            Movie(id, creationDateTime, genre, name, screenwriter, oscarsCount,
                             usaBoxOffice, length, coordinates), res)
     }
 
@@ -169,7 +174,8 @@ internal class MovieBuilderImplTest {
     fun buildDefault() {
         val movie = Movie(1, Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()), MovieGenre.TRAGEDY, "name",
                             Person("a", null, null), 1, 1f, 1,
-                            Coordinates(1f, 1))
+                            Coordinates(1f, 1)
+        )
 
         assertEquals(movieBuilder.buildDefault(1), movie)
 

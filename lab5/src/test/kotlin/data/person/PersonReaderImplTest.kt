@@ -1,11 +1,15 @@
 package data.person
 
+import client.data.person.PersonBuilder
+import client.data.person.PersonBuilderImpl
+import client.data.person.PersonReaderImpl
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
 import org.kodein.di.DI
 import org.kodein.di.bindProvider
 import org.kodein.di.instance
+import share.data.person.Country
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.EOFException

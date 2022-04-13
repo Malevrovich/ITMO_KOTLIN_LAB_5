@@ -30,7 +30,7 @@ tasks.test {
 }
 
 application {
-    mainClass.set("MainKt")
+    mainClass.set("server.ServerKt")
 }
 
 tasks{

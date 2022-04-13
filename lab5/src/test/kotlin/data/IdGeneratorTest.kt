@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.kodein.di.DI
 import org.kodein.di.bindSingleton
 import org.kodein.di.instance
-import kotlin.test.BeforeTest
+import server.data.IdGenerator
 
 internal class IdGeneratorTest {
 

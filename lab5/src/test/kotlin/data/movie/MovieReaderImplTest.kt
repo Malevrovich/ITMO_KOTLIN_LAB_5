@@ -1,19 +1,23 @@
 package data.movie
 
-import data.coordinates.CoordinatesBuilder
-import data.coordinates.CoordinatesBuilderImpl
-import data.coordinates.CoordinatesReader
-import data.coordinates.CoordinatesReaderImpl
-import data.person.PersonBuilder
-import data.person.PersonBuilderImpl
-import data.person.PersonReader
-import data.person.PersonReaderImpl
+import client.data.coordinates.CoordinatesBuilder
+import client.data.coordinates.CoordinatesBuilderImpl
+import client.data.coordinates.CoordinatesReader
+import client.data.coordinates.CoordinatesReaderImpl
+import client.data.movie.MovieBuilder
+import client.data.movie.MovieBuilderImpl
+import client.data.movie.MovieReaderImpl
+import client.data.person.PersonBuilder
+import client.data.person.PersonBuilderImpl
+import client.data.person.PersonReader
+import client.data.person.PersonReaderImpl
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
 import org.kodein.di.DI
 import org.kodein.di.bindProvider
 import org.kodein.di.instance
+import share.data.movie.MovieGenre
 import java.io.*
 import java.util.*
 import kotlin.test.BeforeTest
