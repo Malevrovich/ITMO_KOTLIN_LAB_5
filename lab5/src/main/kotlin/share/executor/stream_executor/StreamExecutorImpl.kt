@@ -1,11 +1,11 @@
 package share.executor.stream_executor
 
-import share.commands.util.CommandDTO
+import share.commands.dto.CommandDTO
 import share.commands.util.CommandReader
 import share.commands.util.CommandResult
 import share.executor.Executor
-import share.user_io.user_reader.UserReader
-import share.user_io.user_writer.UserWriter
+import share.io.input.Input
+import share.io.output.Output
 import share.util.ParseException
 import java.io.EOFException
 import java.io.IOException
@@ -15,13 +15,13 @@ class StreamExecutorImpl(
     private val executor: Executor
 ): StreamExecutor {
 
-    override fun execute(userReader: UserReader, userWriter: UserWriter): List<CommandDTO> {
-        while(userReader.hasNextLine()){
+    override fun execute(input: Input, output: Output): List<CommandDTO> {
+        while(true){
             val res: CommandResult = try{
-                val cmd = commandReader.readCommand(userReader, userWriter)
+                val cmd = commandReader.readCommand(input, output)
                 executor.execute(cmd)
             } catch (e: ParseException){
-                userWriter.println(e.message)
+                output.println(e.message)
                 continue
             } catch (e: EOFException){
                 CommandResult(true, "Входной поток был прерван")
@@ -29,7 +29,7 @@ class StreamExecutorImpl(
                 CommandResult(true, "Входной поток был прерван")
             }
 
-            userWriter.println(res.out)
+            output.println(res.out)
             if(res.stop){
                 break
             }

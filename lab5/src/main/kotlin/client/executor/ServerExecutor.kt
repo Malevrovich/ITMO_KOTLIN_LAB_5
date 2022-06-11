@@ -1,37 +1,29 @@
 package client.executor
 
-import client.connection_io.connection.Connection
-import client.connection_io.connection_reader.ServerReader
-import client.connection_io.connection_writer.ServerWriter
+import client.io.connection.Connection
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.encodeToJsonElement
+import share.commands.dto.CommandDTO
+import share.commands.dto.CommandType
 import share.commands.util.CommandResult
-import share.commands.util.CommandDTO
-import share.commands.util.CommandType
 import share.executor.BasicExecutor
-import share.user_io.user_reader.UserReader
-import share.user_io.user_writer.UserWriter
-import java.io.IOException
+import share.io.input.Input
+import share.io.output.Output
 
 class ServerExecutor(val connection: Connection,
-                     val serverReader: ServerReader,
-                     val serverWriter: ServerWriter,
-                     val userReader: UserReader,
-                     val userWriter: UserWriter
+                     val serverInput: Input,
+                     val serverOutput: Output
 )
     : BasicExecutor() {
 
     override fun execute(cmd: CommandDTO): CommandResult {
-        if(cmd.type == CommandType.EXIT){
-            return CommandResult(true, "Goodbye!")
-        }
+        serverOutput.println(Json.encodeToJsonElement(cmd))
 
-        while (true){
-            try{
-                serverWriter.write(cmd)
-                return serverReader.readCommandResult()
-            } catch (e: IOException){
-                connection.reconnect()
-            }
+        if(cmd.type == CommandType.DISCONNECT) {
+            return CommandResult(true, "DISCONNECT")
         }
+        return Json.decodeFromString(serverInput.nextLine())
     }
 
     override fun execute(cmdList: List<CommandDTO>): List<CommandResult> {

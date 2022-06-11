@@ -1,13 +1,14 @@
 package client.data.coordinates
 
 import share.data.coordinates.Coordinates
-import share.user_io.user_reader.UserReader
-import share.user_io.user_writer.UserWriter
+import share.data.coordinates.CoordinatesBuilder
+import share.io.input.Input
+import share.io.output.Output
 
 interface CoordinatesReader {
-    fun askCoordinates(inp: UserReader, out: UserWriter): Coordinates
+    fun askCoordinates(inp: Input, out: Output): Coordinates
 
-    fun askX(inp: UserReader, out: UserWriter, coordinatesBuilder: CoordinatesBuilder)
+    fun askX(inp: Input, out: Output, coordinatesBuilder: CoordinatesBuilder)
 
-    fun askY(inp: UserReader, out: UserWriter, coordinatesBuilder: CoordinatesBuilder)
+    fun askY(inp: Input, out: Output, coordinatesBuilder: CoordinatesBuilder)
 }

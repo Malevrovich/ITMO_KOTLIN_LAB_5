@@ -1,31 +1,24 @@
 package client.data.movie
 
-import data.askEnum
-import data.checkFloat
-import data.checkInt
+import client.auth.LoginManager
 import client.data.coordinates.CoordinatesReader
-import share.data.movie.Movie
-import share.data.movie.MovieGenre
 import client.data.person.PersonReader
-import share.user_io.user_reader.UserReader
-import share.user_io.user_writer.UserWriter
-import share.util.ParseException
-import java.io.EOFException
+import share.data.movie.Movie
+import share.data.movie.MovieBuilder
+import share.io.input.Input
+import share.io.output.Output
 
 class MovieReaderImpl(
     private val coordinatesReader: CoordinatesReader,
     private val personReader: PersonReader,
-    private val movieBuilder: MovieBuilder
+    private val movieBuilder: MovieBuilder,
+    private val loginManager: LoginManager
 ) : MovieReader {
 
-    fun askName(inp: UserReader, out: UserWriter, movieBuilder: MovieBuilder){
+    fun askName(inp: Input, out: Output, movieBuilder: MovieBuilder){
 
         while(true){
             out.print("Введите поле name: ")
-
-            if(!inp.hasNextLine()){
-                throw EOFException()
-            }
 
             try{
                 movieBuilder.setName(inp.nextLine())
@@ -38,50 +31,36 @@ class MovieReaderImpl(
         }
     }
 
-    override fun askOscarsCount(inp: UserReader, out: UserWriter, movieBuilder: MovieBuilder){
+    override fun askOscarsCount(inp: Input, out: Output, movieBuilder: MovieBuilder){
 
         while(true){
             out.print("Введите поле oscarsCount: ")
 
-            if(!inp.hasNextLine()){
-                throw EOFException()
-            }
-
             try{
-                checkFloat(inp, "oscarsCount")
-                movieBuilder.setOscarsCount(inp.nextInt())
+                movieBuilder.setOscarsCount(inp.nextLine().toInt())
             } catch (e: IllegalArgumentException){
                 out.println(e.message)
                 continue
-            } catch (e: ParseException){
-                out.println(e.message)
-                inp.nextLine()
-                continue
+            } catch (e: NumberFormatException){
+//                out.println(intFormatErrorMsg("oscarsCount"))
             }
             break
         }
 
     }
 
-    override fun askUsaBoxOffice(inp: UserReader, out: UserWriter, movieBuilder: MovieBuilder){
+    override fun askUsaBoxOffice(inp: Input, out: Output, movieBuilder: MovieBuilder){
 
         while(true){
             out.print("Введите поле usaBoxOffice: ")
 
-            if(!inp.hasNextLine()){
-                throw EOFException()
-            }
-
             try{
-                checkFloat(inp, "usaBoxOffice")
-                movieBuilder.setUsaBoxOffice(inp.nextFloat())
+                movieBuilder.setUsaBoxOffice(inp.nextLine().toFloat())
             } catch (e: IllegalArgumentException){
                 out.println(e.message)
                 continue
-            } catch (e: ParseException) {
-                out.println(e.message)
-                inp.nextLine()
-                continue
+            } catch (e: NumberFormatException) {
+//                out.println(floatFormatError("usaBoxOffice"))
             }
 
             break
@@ -89,31 +68,23 @@ class MovieReaderImpl(
 
     }
 
-    override fun askLength(inp: UserReader, out: UserWriter, movieBuilder: MovieBuilder){
+    override fun askLength(inp: Input, out: Output, movieBuilder: MovieBuilder){
         while(true){
             out.print("Введите поле length: ")
 
-            if(!inp.hasNextLine()){
-                throw EOFException()
-            }
-
             try {
-                checkInt(inp, "length")
-                movieBuilder.setLength(inp.nextInt())
+                movieBuilder.setLength(inp.nextLine().toInt())
             } catch (e: IllegalArgumentException){
                 out.println(e.message)
                 continue
-            } catch (e: ParseException){
-                out.println(e.message)
-                inp.nextLine()
-                continue
+            } catch (e: NumberFormatException){
+//                out.println(intFormatErrorMsg("length"))
             }
-
             break
         }
     }
 
-    override fun askMovie(inp: UserReader, out: UserWriter): Movie {
+    override fun askMovie(inp: Input, out: Output): Movie {
         askName(inp, out, movieBuilder)
 
         movieBuilder.setCoordinates(coordinatesReader.askCoordinates(inp, out))
@@ -124,9 +95,11 @@ class MovieReaderImpl(
 
         askLength(inp, out, movieBuilder)
 
-        movieBuilder.setGenre(askEnum<MovieGenre>(inp, out, "genre")!!)
+//        movieBuilder.setGenre(askEnum<MovieGenre>(inp, out, "genre")!!)
 
         movieBuilder.setScreenwriter(personReader.askPerson(inp, out))
+
+        movieBuilder.setUser(loginManager.getCurrentSession())
 
         return movieBuilder.build()
     }

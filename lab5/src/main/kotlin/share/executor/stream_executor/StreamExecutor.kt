@@ -1,9 +1,9 @@
 package share.executor.stream_executor
 
-import share.commands.util.CommandDTO
-import share.user_io.user_reader.UserReader
-import share.user_io.user_writer.UserWriter
+import share.commands.dto.CommandDTO
+import share.io.input.Input
+import share.io.output.Output
 
 interface StreamExecutor {
-    fun execute(userReader: UserReader, userWriter: UserWriter): List<CommandDTO>
+    fun execute(input: Input, output: Output): List<CommandDTO>
 }

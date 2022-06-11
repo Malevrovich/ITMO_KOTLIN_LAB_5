@@ -1,15 +1,16 @@
 package client.data.movie
 
 import share.data.movie.Movie
-import share.user_io.user_reader.UserReader
-import share.user_io.user_writer.UserWriter
+import share.data.movie.MovieBuilder
+import share.io.input.Input
+import share.io.output.Output
 
 interface MovieReader {
-    fun askMovie(inp: UserReader, out: UserWriter): Movie
+    fun askMovie(inp: Input, out: Output): Movie
 
-    fun askOscarsCount(inp: UserReader, out: UserWriter, movieBuilder: MovieBuilder)
+    fun askOscarsCount(inp: Input, out: Output, movieBuilder: MovieBuilder)
 
-    fun askUsaBoxOffice(inp: UserReader, out: UserWriter, movieBuilder: MovieBuilder)
+    fun askUsaBoxOffice(inp: Input, out: Output, movieBuilder: MovieBuilder)
 
-    fun askLength(inp: UserReader, out: UserWriter, movieBuilder: MovieBuilder)
+    fun askLength(inp: Input, out: Output, movieBuilder: MovieBuilder)
 }

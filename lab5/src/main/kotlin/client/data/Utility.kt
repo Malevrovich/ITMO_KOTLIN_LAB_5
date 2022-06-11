@@ -1,22 +1,8 @@
 package data
 
-import share.user_io.user_reader.UserReader
-import share.user_io.user_writer.UserWriter
-import share.util.ParseException
-
-
-fun checkFloat(s: UserReader, field: String){
-    if(!s.hasNextFloat()){
-        throw ParseException("$field должно быть числом")
-    }
-}
-
-fun checkInt(s: UserReader, field: String){
-    if(!s.hasNextInt()){
-        s.nextLine()
-        throw ParseException("Поле $field должно быть целым числом")
-    }
-}
+import share.io.input.Input
+import share.io.output.Output
+import share.localization.Localization
 
 fun checkNull(obj: Any?, name: String){
     if(obj == null){
@@ -24,14 +10,15 @@ fun checkNull(obj: Any?, name: String){
     }
 }
 
-inline fun <reified T: Enum<T>> askEnum(inp: UserReader, out: UserWriter, field: String, withNull: Boolean = false): T?{
+inline fun <reified T: Enum<T>> askEnum(inp: Input, out: Output, field: String,
+                                                            localization: Localization, withNull: Boolean = false): T?{
 
     while (true){
-        out.print("Возможные значения $field: ")
+        out.print(localization.getString("possibleValues") + field + ":")
         out.println(enumValues<T>().joinToString { it.name })
 
         while(true) {
-            out.print("Введите значение $field: ")
+            out.print( localization.getString("askValue") + field + ":")
             val s = inp.nextLine()
 
             if(s.isBlank() && withNull){
@@ -52,3 +39,8 @@ inline fun <reified T: Enum<T>> askEnum(inp: UserReader, out: UserWriter, field:
         }
     }
 }
+
+fun intFormatErrorMsg(field: String, localization: Localization)
+                        = field + localization.getString("intFormatError")
+fun floatFormatError(field: String, localization: Localization)
+                        = field + localization.getString("floatFormatError")

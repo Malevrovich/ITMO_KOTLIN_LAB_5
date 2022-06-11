@@ -1,7 +1,6 @@
 package share.executor
 
-import share.commands.Command
-import share.commands.util.CommandDTO
+import share.commands.dto.CommandDTO
 import share.commands.util.CommandResult
 
 interface Executor {

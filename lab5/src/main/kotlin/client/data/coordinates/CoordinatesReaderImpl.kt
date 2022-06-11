@@ -1,64 +1,51 @@
 package client.data.coordinates
 
-import data.checkFloat
-import data.checkInt
+import data.floatFormatError
+import data.intFormatErrorMsg
 import share.data.coordinates.Coordinates
-import share.user_io.user_reader.UserReader
-import share.user_io.user_writer.UserWriter
-import share.util.ParseException
-import java.io.EOFException
+import share.data.coordinates.CoordinatesBuilder
+import share.io.input.Input
+import share.io.output.Output
+import share.localization.Localization
 
 class CoordinatesReaderImpl(
-    private val coordinatesBuilder: CoordinatesBuilder
+    private val coordinatesBuilder: CoordinatesBuilder,
+    private val localization: Localization
 ): CoordinatesReader {
 
-    override fun askX(inp: UserReader, out: UserWriter, coordinatesBuilder: CoordinatesBuilder) {
+    override fun askX(inp: Input, out: Output, coordinatesBuilder: CoordinatesBuilder) {
         while(true) {
-            out.print("Введите поле Coordinate.x: ")
-
-            if(!inp.hasNextLine()){
-                throw EOFException()
-            }
+            out.print(localization.getString("askCoordinatesX"))
 
             try{
-                checkFloat(inp, "Coordinate.x")
-                coordinatesBuilder.setX(inp.nextFloat())
+                coordinatesBuilder.setX(inp.nextLine().toFloat())
             } catch (e: IllegalArgumentException){
                 out.println(e.message)
                 continue
-            } catch (e: ParseException){
-                out.println(e.message)
-                inp.nextLine()
-                continue
+            } catch (e: NumberFormatException){
+                out.println(floatFormatError("Coordinates.x", localization))
             }
             break
         }
     }
 
-    override fun askY(inp: UserReader, out: UserWriter, coordinatesBuilder: CoordinatesBuilder) {
+    override fun askY(inp: Input, out: Output, coordinatesBuilder: CoordinatesBuilder) {
         while(true){
             out.print("Введите поле Coordinates.y: ")
 
-            if(!inp.hasNextLine()){
-                throw EOFException()
-            }
-
             try {
-                checkInt(inp, "Coordinates.y")
-                coordinatesBuilder.setY(inp.nextInt())
+                coordinatesBuilder.setY(inp.nextLine().toInt())
             } catch (e: IllegalArgumentException){
                 out.println(e.message)
                 continue
-            } catch (e: ParseException){
-                out.println(e.message)
-                inp.nextLine()
-                continue
+            } catch (e: NumberFormatException){
+                out.println(intFormatErrorMsg("Coordinates.y", localization))
             }
             break
         }
     }
 
-    override fun askCoordinates(inp: UserReader, out: UserWriter): Coordinates {
+    override fun askCoordinates(inp: Input, out: Output): Coordinates {
         askX(inp, out, coordinatesBuilder)
 
         askY(inp, out, coordinatesBuilder)

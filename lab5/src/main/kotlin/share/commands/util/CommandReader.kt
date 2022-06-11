@@ -1,9 +1,9 @@
 package share.commands.util
 
-import share.commands.Command
-import share.user_io.user_reader.UserReader
-import share.user_io.user_writer.UserWriter
+import share.commands.dto.CommandDTO
+import share.io.input.Input
+import share.io.output.Output
 
 interface CommandReader {
-    fun readCommand(inp: UserReader, out: UserWriter): CommandDTO
+    fun readCommand(inp: Input, output: Output): CommandDTO
 }

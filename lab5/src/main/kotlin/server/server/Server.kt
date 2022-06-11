@@ -1,5 +1,5 @@
 package server.server
 
 interface Server {
-    fun start(port: Int)
+    suspend fun start(port: Int)
 }

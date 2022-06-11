@@ -1,12 +1,10 @@
 package client.data.person
 
-import data.askEnum
-import share.data.person.Country
-import share.data.person.Person
 import kotlinx.datetime.toKotlinLocalDateTime
-import share.user_io.user_reader.UserReader
-import share.user_io.user_writer.UserWriter
-import java.io.EOFException
+import share.data.person.Person
+import share.data.person.PersonBuilder
+import share.io.input.Input
+import share.io.output.Output
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
@@ -15,13 +13,9 @@ class PersonReaderImpl(
     private val personBuilder: PersonBuilder
 ): PersonReader {
 
-    override fun askName(inp: UserReader, out: UserWriter, personBuilder: PersonBuilder) {
+    override fun askName(inp: Input, out: Output, personBuilder: PersonBuilder) {
         while(true){
             out.print("Введите поле Person.name: ")
-
-            if(!inp.hasNextLine()){
-                throw EOFException()
-            }
 
             try{
                 personBuilder.setName(inp.nextLine())
@@ -35,17 +29,13 @@ class PersonReaderImpl(
         }
     }
 
-    override fun askBirthday(inp: UserReader, out: UserWriter, personBuilder: PersonBuilder) {
+    override fun askBirthday(inp: Input, out: Output, personBuilder: PersonBuilder) {
         while(true){
             out.print("Введите поле Person.birthday: ")
 
             val format = "HH:mm dd.MM.yyyy"
             val formatter = DateTimeFormatter.ofPattern(format)
             out.println("Используемый формат $format")
-
-            if(!inp.hasNextLine()){
-                throw EOFException()
-            }
 
             val s = inp.nextLine()
 
@@ -70,13 +60,13 @@ class PersonReaderImpl(
         }
     }
 
-    override fun askPerson(inp: UserReader, out: UserWriter): Person {
+    override fun askPerson(inp: Input, out: Output): Person {
         personBuilder.clear()
 
         askName(inp, out, personBuilder)
         askBirthday(inp, out, personBuilder)
 
-        personBuilder.setNationality(askEnum<Country>(inp, out, "nationality", true))
+//        personBuilder.setNationality(askEnum<Country>(inp, out, "nationality", true))
 
         return personBuilder.build()
     }

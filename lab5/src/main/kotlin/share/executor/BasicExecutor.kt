@@ -1,6 +1,6 @@
 package share.executor
 
-import share.commands.util.CommandDTO
+import share.commands.dto.CommandDTO
 
 abstract class BasicExecutor: Executor {
     private val executed: MutableList<CommandDTO> = mutableListOf()

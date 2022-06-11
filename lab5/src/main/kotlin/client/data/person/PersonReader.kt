@@ -1,13 +1,14 @@
 package client.data.person
 
 import share.data.person.Person
-import share.user_io.user_reader.UserReader
-import share.user_io.user_writer.UserWriter
+import share.data.person.PersonBuilder
+import share.io.input.Input
+import share.io.output.Output
 
 interface PersonReader {
-    fun askPerson(inp: UserReader, out: UserWriter): Person
+    fun askPerson(inp: Input, out: Output): Person
 
-    fun askName(inp: UserReader, out: UserWriter, personBuilder: PersonBuilder)
+    fun askName(inp: Input, out: Output, personBuilder: PersonBuilder)
 
-    fun askBirthday(inp: UserReader, out: UserWriter, personBuilder: PersonBuilder)
+    fun askBirthday(inp: Input, out: Output, personBuilder: PersonBuilder)
 }
